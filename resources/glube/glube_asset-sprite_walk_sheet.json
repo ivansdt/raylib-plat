@@ -1,0 +1,83 @@
+{ "frames": {
+   "glube_asset-sprite_walk_XIII_trimmed 0.aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   },
+   "glube_asset-sprite_walk_XIII_trimmed 1.aseprite": {
+    "frame": { "x": 65, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   },
+   "glube_asset-sprite_walk_XIII_trimmed 2.aseprite": {
+    "frame": { "x": 130, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   },
+   "glube_asset-sprite_walk_XIII_trimmed 3.aseprite": {
+    "frame": { "x": 195, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   },
+   "glube_asset-sprite_walk_XIII_trimmed 4.aseprite": {
+    "frame": { "x": 260, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   },
+   "glube_asset-sprite_walk_XIII_trimmed 5.aseprite": {
+    "frame": { "x": 325, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   },
+   "glube_asset-sprite_walk_XIII_trimmed 6.aseprite": {
+    "frame": { "x": 390, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   },
+   "glube_asset-sprite_walk_XIII_trimmed 7.aseprite": {
+    "frame": { "x": 455, "y": 0, "w": 65, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 65, "h": 32 },
+    "sourceSize": { "w": 65, "h": 32 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "glube_asset-sprite_walk_sheet.png",
+  "format": "RGBA8888",
+  "size": { "w": 520, "h": 32 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "BcRr", "opacity": 255, "blendMode": "normal" },
+   { "name": "Outline", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

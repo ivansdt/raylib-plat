@@ -1,0 +1,61 @@
+{ "frames": {
+   "glube_asset-sprite_attack_Fin 0.aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 77, "h": 41 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 77, "h": 41 },
+    "sourceSize": { "w": 77, "h": 41 },
+    "duration": 100
+   },
+   "glube_asset-sprite_attack_Fin 1.aseprite": {
+    "frame": { "x": 77, "y": 0, "w": 77, "h": 41 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 77, "h": 41 },
+    "sourceSize": { "w": 77, "h": 41 },
+    "duration": 100
+   },
+   "glube_asset-sprite_attack_Fin 2.aseprite": {
+    "frame": { "x": 154, "y": 0, "w": 77, "h": 41 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 77, "h": 41 },
+    "sourceSize": { "w": 77, "h": 41 },
+    "duration": 100
+   },
+   "glube_asset-sprite_attack_Fin 3.aseprite": {
+    "frame": { "x": 231, "y": 0, "w": 77, "h": 41 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 77, "h": 41 },
+    "sourceSize": { "w": 77, "h": 41 },
+    "duration": 100
+   },
+   "glube_asset-sprite_attack_Fin 4.aseprite": {
+    "frame": { "x": 308, "y": 0, "w": 77, "h": 41 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 77, "h": 41 },
+    "sourceSize": { "w": 77, "h": 41 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "glube_asset-sprite_attack_sheet.png",
+  "format": "RGBA8888",
+  "size": { "w": 385, "h": 41 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Loop", "from": 0, "to": 4, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Body Copy", "opacity": 255, "blendMode": "normal" },
+   { "name": "oultin2", "opacity": 255, "blendMode": "normal" },
+   { "name": "Layer 4", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
