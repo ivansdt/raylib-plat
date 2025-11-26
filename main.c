@@ -93,15 +93,11 @@ static void DrawFrame(void)
 {
     // Draw
     //----------------------------------------------------------------------------------
-    BeginDrawing();
-
     BeginMode2D(camera);
 
     ClearBackground(RAYWHITE);
     DrawTextureRec(glubeIdle, sourceRec, (Vector2){200, 300}, WHITE);
 
-    EndMode2D();
-    
     DrawText(TextFormat("Current frame: %i", animations[0].current), 10, 35, 20, RED);
     DrawText(TextFormat("SourceRec.x: %f", sourceRec.x), 10, 55, 20, RED);
 
