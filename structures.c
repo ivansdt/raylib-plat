@@ -1,6 +1,5 @@
 #include "raylib.h"
 
-
 typedef struct {
     float right;
     float left;
@@ -34,4 +33,4 @@ typedef struct {
     bool hitOnWall;
 
     Input *control;
-} entity;
+} Entity;

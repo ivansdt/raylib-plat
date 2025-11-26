@@ -22,6 +22,7 @@
 #include "raylib.h"
 #include "animation.c"
 #include "structures.c"
+#include "physics.c"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
@@ -31,7 +32,7 @@
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
 Camera2D camera = {0};
-entity player = {0};
+Entity player = {0};
 Texture2D glubeIdle;
 Rectangle sourceRec;
 //----------------------------------------------------------------------------------
@@ -93,6 +94,7 @@ int main()
 // Update
 static void Update(void)
 {
+    delta = GetFrameTime();
     sourceRec = animate_GlubeIdle();
 }
 // Proccess inputs
@@ -100,7 +102,7 @@ static void ProccessInput(void)
 {
     if (IsKeyDown(KEY_A))
         player.position.x -= 3;
-    if (IsKeyDown(KEY_S))
+    if (IsKeyDown(KEY_D))
         player.position.x += 3;
 }
 // Draw frame
@@ -123,3 +125,4 @@ static void DrawFrame(void)
     EndDrawing();
     //----------------------------------------------------------------------------------
 }
+
