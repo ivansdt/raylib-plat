@@ -33,4 +33,4 @@ typedef struct {
     Input *control;
 } entity;
 
-static entity player = {0};
+static entity Player = { 0 };

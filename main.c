@@ -22,6 +22,7 @@
 #include "raylib.h"
 #include "animation.c"
 #include "structures.c"
+#include "physics.c"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
