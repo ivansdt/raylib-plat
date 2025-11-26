@@ -51,6 +51,11 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "raylib");
 
+    camera.target = (Vector2){200, 300};
+    camera.offset = (Vector2){screenWidth / 2.0f, screenHeight / 2.0f};
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
+
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
 
     init_GlubeIdle();
@@ -93,10 +98,14 @@ static void DrawFrame(void)
 {
     // Draw
     //----------------------------------------------------------------------------------
-    BeginMode2D(camera);
 
     ClearBackground(RAYWHITE);
     DrawTextureRec(glubeIdle, sourceRec, (Vector2){200, 300}, WHITE);
+
+    BeginMode2D(camera);
+    Rectangle playerRect = {20, 40, 40.0f, 40.0f};
+    DrawRectangleRec(playerRect, RED);
+    EndMode2D();
 
     DrawText(TextFormat("Current frame: %i", animations[0].current), 10, 35, 20, RED);
     DrawText(TextFormat("SourceRec.x: %f", sourceRec.x), 10, 55, 20, RED);
