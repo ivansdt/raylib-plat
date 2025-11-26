@@ -64,10 +64,10 @@ int main()
 
     player.position.x = 200;
     player.position.y = 300;
-    player.velocity.x = 1;
-    player.velocity.y = 1;
+    player.velocity.x = 2;
+    player.velocity.y = 2;
 
-    gravity = 2;
+    gravity = 6;
 
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
 
