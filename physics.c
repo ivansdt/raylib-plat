@@ -16,3 +16,4 @@ void updatePhysics(Player *player, Vector2 *velocity) {
    }
 }
  
+

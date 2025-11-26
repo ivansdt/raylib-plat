@@ -1,14 +1,5 @@
 #include "raylib.h"
 
-
-typedef struct {
-    float right;
-    float left;
-    float up;
-    float down;
-    bool jump;
-} Input;
-
 typedef struct {
     Vector2 position;
     float direction;
@@ -30,7 +21,6 @@ typedef struct {
     bool hitOnCeiling;
     bool hitOnWall;
 
-    Input *control;
-} entity;
+} Entity;
 
-static entity Player = { 0 };
+static Entity Player = { 0 };

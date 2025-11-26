@@ -32,9 +32,12 @@
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
 Camera2D camera = {0};
-entity player = {0};
+Entity player = {0};
 Texture2D glubeIdle;
 Rectangle sourceRec;
+
+static float delta;
+static int gravity;
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
 //----------------------------------------------------------------------------------
@@ -61,6 +64,10 @@ int main()
 
     player.position.x = 200;
     player.position.y = 300;
+    player.velocity.x = 2;
+    player.velocity.y = 2;
+
+    gravity = 6;
 
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
 
@@ -91,19 +98,40 @@ int main()
     return 0;
 }
 
+// Input functions
+void OnJumpKeyPressed()
+{
+    player.velocity.y = -3; // Give a vertical boost to the players velocity to start jump
+}
+
+// Gravity
+static void UpdateGravity(float time)
+{
+    player.position.x += player.velocity.x * time;
+    player.position.y += player.velocity.y * time;
+    player.velocity.y += gravity * time;
+}
+
 // Update
 static void Update(void)
 {
+    delta = GetFrameTime();
     sourceRec = animate_GlubeIdle();
+    UpdateGravity(delta);
 }
 // Proccess inputs
 static void ProccessInput(void)
 {
     if (IsKeyDown(KEY_A))
-        player.position.x -= 3;
-    if (IsKeyDown(KEY_S))
-        player.position.x += 3;
+        player.position.x -= player.velocity.x;
+    if (IsKeyDown(KEY_D))
+        player.position.x += player.velocity.x;
+
+    if (IsKeyPressed(KEY_SPACE))
+        OnJumpKeyPressed();
+    player.position.y += player.velocity.y;
 }
+
 // Draw frame
 static void DrawFrame(void)
 {
