@@ -10,9 +10,6 @@ typedef struct {
 } Input;
 
 typedef struct {
-    int width;
-    int height;
-
     Vector2 position;
     float direction;
     float maxSpd;
@@ -35,3 +32,5 @@ typedef struct {
 
     Input *control;
 } entity;
+
+static entity player = {0};
