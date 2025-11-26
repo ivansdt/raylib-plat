@@ -9,9 +9,6 @@ typedef struct {
 } Input;
 
 typedef struct {
-    int width;
-    int height;
-
     Vector2 position;
     float direction;
     float maxSpd;
