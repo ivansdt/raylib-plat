@@ -20,6 +20,7 @@
  ********************************************************************************************/
 
 #include "raylib.h"
+#include "animation.c"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
@@ -30,9 +31,7 @@
 //----------------------------------------------------------------------------------
 Camera camera = {0};
 Texture2D glubeIdle;
-
-Rectangle sourceRec = {0.0f, 0.0f, 44.0f, 31.0f};
-Vector2 destPos = {400, 300};
+Rectangle sourceRec;
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
 //----------------------------------------------------------------------------------
@@ -51,8 +50,10 @@ int main()
     const int screenHeight = 450;
 
     InitWindow(screenWidth, screenHeight, "raylib");
+
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
 
+    init_GlubeIdle();
     //--------------------------------------------------------------------------------------
 
 #if defined(PLATFORM_WEB)
@@ -81,6 +82,7 @@ int main()
 // Update
 static void Update(void)
 {
+    sourceRec = animate_GlubeIdle();
 }
 // Proccess inputs
 static void ProccessInput(void)
@@ -94,7 +96,9 @@ static void DrawFrame(void)
     BeginDrawing();
 
     ClearBackground(RAYWHITE);
-    DrawTextureRec(glubeIdle, sourceRec, destPos, WHITE);
+    DrawTextureRec(glubeIdle, sourceRec, (Vector2){200, 300}, WHITE);
+    DrawText(TextFormat("Current frame: %i", animations[0].current), 10, 35, 20, RED);
+    DrawText(TextFormat("SourceRec.x: %f", sourceRec.x), 10, 55, 20, RED);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
