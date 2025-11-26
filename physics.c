@@ -3,17 +3,20 @@
 
 
 
-
-void updatePhysics(Player *player, Vector2 *velocity) {
-    float gravity = 0.5f;
-    if(player->isGrounded==false)
-   {
-      velocity->y +=gravity;
+void updatePhysics(Entity*Player, Vector2 *velocity) {
+   if (Player->position.y >= 200) {
+      Player->isGrounded = true;
+      velocity->y = 0;
       }
-    else
+   else if (Player->position.y < 200) {
+        Player->isGrounded = false;  
+    }
+
+    float gravity = 1.0f;
+   if(!Player->isGrounded==false)
    {
-    velocity->y +=0;
+      velocity->y += gravity;
+      }
    }
-}
  
 

@@ -32,7 +32,6 @@
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
 Camera2D camera = {0};
-Entity player = {0};
 Texture2D glubeIdle;
 Rectangle sourceRec;
 
@@ -62,12 +61,12 @@ int main()
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-    player.position.x = 200;
-    player.position.y = 300;
-    player.velocity.x = 2;
-    player.velocity.y = 2;
+    Player.position.x = 200;
+    Player.position.y = 300;
+    Player.velocity.x = 2;
+    Player.velocity.y = 2;
 
-    gravity = 6;
+
 
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
 
@@ -101,15 +100,15 @@ int main()
 // Input functions
 void OnJumpKeyPressed()
 {
-    player.velocity.y = -3; // Give a vertical boost to the players velocity to start jump
+    Player.velocity.y = -3; // aGive a vertical boost to the players velocity to start jump
 }
 
 // Gravity
 static void UpdateGravity(float time)
 {
-    player.position.x += player.velocity.x * time;
-    player.position.y += player.velocity.y * time;
-    player.velocity.y += gravity * time;
+    Player.position.x += Player.velocity.x * time;
+    Player.position.y += Player.velocity.y * time;
+    Player.velocity.y += gravity * time;
 }
 
 // Update
@@ -123,13 +122,13 @@ static void Update(void)
 static void ProccessInput(void)
 {
     if (IsKeyDown(KEY_A))
-        player.position.x -= player.velocity.x;
+        Player.position.x -= Player.velocity.x;
     if (IsKeyDown(KEY_D))
-        player.position.x += player.velocity.x;
+        Player.position.x += Player.velocity.x;
 
     if (IsKeyPressed(KEY_SPACE))
         OnJumpKeyPressed();
-    player.position.y += player.velocity.y;
+    Player.position.y += Player.velocity.y;
 }
 
 // Draw frame
@@ -142,7 +141,7 @@ static void DrawFrame(void)
 
     BeginMode2D(camera);
 
-    DrawTextureRec(glubeIdle, sourceRec, (Vector2){player.position.x, player.position.y}, WHITE);
+    DrawTextureRec(glubeIdle, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
 
     EndMode2D();
 
