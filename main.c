@@ -29,7 +29,7 @@
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-Camera camera = {0};
+Camera2D camera = {0};
 Texture2D glubeIdle;
 Rectangle sourceRec;
 //----------------------------------------------------------------------------------
@@ -95,8 +95,13 @@ static void DrawFrame(void)
     //----------------------------------------------------------------------------------
     BeginDrawing();
 
+    BeginMode2D(camera);
+
     ClearBackground(RAYWHITE);
     DrawTextureRec(glubeIdle, sourceRec, (Vector2){200, 300}, WHITE);
+
+    EndMode2D();
+    
     DrawText(TextFormat("Current frame: %i", animations[0].current), 10, 35, 20, RED);
     DrawText(TextFormat("SourceRec.x: %f", sourceRec.x), 10, 55, 20, RED);
 
