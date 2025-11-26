@@ -21,6 +21,7 @@
 
 #include "raylib.h"
 #include "animation.c"
+#include "structures.c"
 
 #if defined(PLATFORM_WEB)
 #include <emscripten/emscripten.h>
@@ -30,6 +31,7 @@
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
 Camera2D camera = {0};
+entity player = {0};
 Texture2D glubeIdle;
 Rectangle sourceRec;
 //----------------------------------------------------------------------------------
@@ -56,12 +58,16 @@ int main()
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
+    player.position.x = 200;
+    player.position.y = 300;
+
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
 
     init_GlubeIdle();
     //--------------------------------------------------------------------------------------
 
 #if defined(PLATFORM_WEB)
+
     emscripten_set_main_loop(DrawFrame, 60, 1);
 #else
     SetTargetFPS(60); // Set our game to run at 60 frames-per-second
@@ -92,6 +98,10 @@ static void Update(void)
 // Proccess inputs
 static void ProccessInput(void)
 {
+    if (IsKeyDown(KEY_A))
+        player.position.x -= 3;
+    if (IsKeyDown(KEY_S))
+        player.position.x += 3;
 }
 // Draw frame
 static void DrawFrame(void)
@@ -100,11 +110,11 @@ static void DrawFrame(void)
     //----------------------------------------------------------------------------------
 
     ClearBackground(RAYWHITE);
-    DrawTextureRec(glubeIdle, sourceRec, (Vector2){200, 300}, WHITE);
 
     BeginMode2D(camera);
-    Rectangle playerRect = {20, 40, 40.0f, 40.0f};
-    DrawRectangleRec(playerRect, RED);
+
+    DrawTextureRec(glubeIdle, sourceRec, (Vector2){player.position.x, player.position.y}, WHITE);
+
     EndMode2D();
 
     DrawText(TextFormat("Current frame: %i", animations[0].current), 10, 35, 20, RED);
