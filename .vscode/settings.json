@@ -10,7 +10,8 @@
 	},
 	"files.associations": {
 		"text_encoding": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"raylib.h": "c"
 	},
 	"C_Cpp.errorSquiggles": "enabled"
 }
