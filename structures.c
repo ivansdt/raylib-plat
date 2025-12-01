@@ -24,3 +24,11 @@ typedef struct {
 } Entity;
 
 static Entity Player = { 0 };
+
+typedef struct  {
+    Vector2 position;
+    Vector2 size;
+
+} ground;
+
+static ground groundArr[5] = {0};
