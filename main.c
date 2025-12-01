@@ -36,7 +36,6 @@ Texture2D glubeIdle;
 Rectangle sourceRec;
 
 static float delta;
-static int gravity;
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
 //----------------------------------------------------------------------------------
@@ -63,7 +62,7 @@ int main()
 
     Player.position.x = 200;
     Player.position.y = 300;
-    Player.velocity.x = 2;
+    Player.velocity.x = 0;
     Player.velocity.y = 0;
 
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
@@ -98,34 +97,32 @@ int main()
 // Input functions
 void OnJumpKeyPressed()
 {
-    Player.jumpImpulse = 5; // Give a vertical boost to the players velocity to start jump
+    Player.velocity.y = -3;
 }
-
-// Gravity
 
 // Update
 static void Update(void)
 {
     delta = GetFrameTime();
     sourceRec = animate_GlubeIdle();
-    updatePhysics(Player, Player.velocity);
+    updatePhysics(delta);
 }
 // Proccess inputs
 static void ProccessInput(void)
 {
     if (IsKeyDown(KEY_A))
-        Player.position.x -= Player.velocity.x;
+        Player.position.x -= Player.velocity.x + 2;
     if (IsKeyDown(KEY_D))
-        Player.position.x += Player.velocity.x;
+        Player.position.x += Player.velocity.x + 2;
 
     if (IsKeyPressed(KEY_SPACE))
-    {
+
         OnJumpKeyPressed();
-        Player.velocity.y -= Player.jumpImpulse;
-    }
+
+
     // test inputs
     if (IsKeyDown(KEY_S))
-        ++Player.velocity.y;
+        Player.velocity.y = 0;
 }
 
 // Draw frame

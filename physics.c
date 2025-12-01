@@ -1,21 +1,24 @@
 #include "raylib.h"
 
-void updatePhysics(Entity Player, Vector2 velocity)
+static int gravity = 2;
+static int ground = 400;
+
+void updatePhysics(float time)
 {
-    
-    if (Player.position.y == 200)
+
+    Player.position.y += Player.velocity.y;
+    Player.velocity.y += gravity * time;
+
+    if (Player.position.y >= ground)
     {
         Player.isGrounded = true;
-        velocity.y = 0;
+        Player.velocity.y = 0;
     }
-    else if (Player.position.y < 200)
+
+    if (Player.position.y < ground)
     {
         Player.isGrounded = false;
     }
 
-    float gravity = 1.0f;
-    if (!Player.isGrounded == false)
-    {
-        velocity.y += gravity;
-    }
+
 }
