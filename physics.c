@@ -4,7 +4,7 @@
 
 
 void updatePhysics(Entity*Player, Vector2 *velocity) {
-   if (Player->position.y >= 200) {
+   if (Player->position.y == 200) {
       Player->isGrounded = true;
       velocity->y = 0;
       }

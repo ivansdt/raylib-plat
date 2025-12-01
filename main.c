@@ -64,7 +64,7 @@ int main()
     Player.position.x = 200;
     Player.position.y = 300;
     Player.velocity.x = 2;
-    Player.velocity.y = 2;
+    Player.velocity.y = 0;
 
 
 
@@ -100,7 +100,7 @@ int main()
 // Input functions
 void OnJumpKeyPressed()
 {
-    Player.velocity.y = -3; // aGive a vertical boost to the players velocity to start jump
+    Player.jumpImpulse=1; // aGive a vertical boost to the players velocity to start jump
 }
 
 // Gravity
@@ -108,7 +108,7 @@ static void UpdateGravity(float time)
 {
     Player.position.x += Player.velocity.x * time;
     Player.position.y += Player.velocity.y * time;
-    Player.velocity.y += gravity * time;
+    Player.position.y += Player.velocity.y;
 }
 
 // Update
@@ -128,7 +128,10 @@ static void ProccessInput(void)
 
     if (IsKeyPressed(KEY_SPACE))
         OnJumpKeyPressed();
-    Player.position.y += Player.velocity.y;
+    Player.velocity.y -= Player.jumpImpulse;
+// test inputs
+    if (IsKeyDown(KEY_S))
+        ++ Player.velocity.y;    
 }
 
 // Draw frame
@@ -147,6 +150,7 @@ static void DrawFrame(void)
 
     DrawText(TextFormat("Current frame: %i", animations[0].current), 10, 35, 20, RED);
     DrawText(TextFormat("SourceRec.x: %f", sourceRec.x), 10, 55, 20, RED);
+    DrawText(TextFormat("speed.y: %f", Player.velocity.y), 10, 75, 20, RED);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
