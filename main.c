@@ -67,7 +67,8 @@ int main()
 
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
 
-    init_GlubeIdle();
+    initAnim(0, "GlobbIdle", 44.0f, 31.0f);
+    initAnim(1, "GlobbWalk", 65.0f, 32.0f);
     //--------------------------------------------------------------------------------------
 
 #if defined(PLATFORM_WEB)
@@ -104,25 +105,28 @@ void OnJumpKeyPressed()
 static void Update(void)
 {
     delta = GetFrameTime();
-    sourceRec = animate_GlubeIdle();
+    sourceRec = animate(0, 5);
     updatePhysics(delta);
 }
 // Proccess inputs
 static void ProccessInput(void)
 {
     if (IsKeyDown(KEY_A))
+    {
         Player.position.x -= Player.velocity.x + 2;
+        Player.isMoving = true;
+    }
+
     if (IsKeyDown(KEY_D))
+    {
         Player.position.x += Player.velocity.x + 2;
+        Player.isMoving = true;
+    }
 
     if (IsKeyPressed(KEY_SPACE))
-
         OnJumpKeyPressed();
 
-
-    // test inputs
-    if (IsKeyDown(KEY_S))
-        Player.velocity.y = 0;
+    Player.isMoving = false;
 }
 
 // Draw frame

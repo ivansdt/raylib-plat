@@ -12,35 +12,35 @@ typedef struct
 
 AnimationClip animations[3];
 
-static void init_GlubeIdle(void)
+static void initAnim(int arrId, char* animName, float sizeX, float sizeY)
 {
-    animations[0].name = "Glube";
+    animations[arrId].name = animName;
 
-    float offset = 44.0f;
+    float offset = sizeX;
     for (int i = 0; i < 6; i++)
     {
-        animations[0].frames[i] = (Rectangle){offset, 0.0f, 44.0f, 31.0f};
-        offset += 44.0f;
+        animations[arrId].frames[i] = (Rectangle){offset, 0.0f, sizeX, sizeY};
+        offset += sizeX;
     }
 
-    animations[0].fps = 6;
-    animations[0].frameCount = 0;
-    animations[0].current = 0;
+    animations[arrId].fps = 6;
+    animations[arrId].frameCount = 0;
+    animations[arrId].current = 0;
 }
 
-static Rectangle animate_GlubeIdle(void)
+static Rectangle animate(int arrId, int max)
 {
-    animations[0].frameCount++;
+    animations[arrId].frameCount++;
 
-    if (animations[0].frameCount >= (60 / animations[0].fps))
+    if (animations[arrId].frameCount >= (60 / animations[arrId].fps))
     {
-        animations[0].frameCount = 0;
-        animations[0].current++;
+        animations[arrId].frameCount = 0;
+        animations[arrId].current++;
 
-        if (animations[0].current > 5)
+        if (animations[arrId].current > max)
         {
-            animations[0].current = 0;
+            animations[arrId].current = 0;
         }
     }
-    return animations[0].frames[animations[0].current];
+    return animations[arrId].frames[animations[arrId].current];
 }

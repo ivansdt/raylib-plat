@@ -16,6 +16,7 @@ typedef struct {
 
     bool isGrounded;
     bool isJumping;
+    bool isMoving;
     // Flags for detecting collision
     bool hitOnFloor;
     bool hitOnCeiling;
