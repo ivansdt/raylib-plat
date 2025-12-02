@@ -30,3 +30,4 @@ void updatePhysics(float time)
         Player.isGrounded = false;
     }
 }
+

@@ -104,6 +104,7 @@ int main()
     return 0;
 }
 
+
 // Input functions
 void OnJumpKeyPressed()
 {
@@ -121,11 +122,36 @@ void ResetAnim(int id)
     animations[id].frameCount = 0;
 }
 
+groundTile tiles[] = {
+    { {  50.0, 300.0 }, { 32.0, 32.0 } },   // tile at (50 x,300 y), size 32x32
+    { { 150.0, 300.0 }, { 32.0, 48.0 } },  
+    { { 300.0, 300.0 }, { 64.0, 16.0 } }    
+};
+int tileCount = sizeof(tiles) / sizeof(tiles[0]);
+
+// Collision check
+static void CheckTileCollisions(void)
+{
+    float playerWidth = 30;
+    float playerHeight = 30;
+    Rectangle playerRec = { Player.position.x, Player.position.y, playerWidth, playerHeight };
+    
+    for (int i = 0; i < tileCount; ++i) {
+        Rectangle tileRec = { tiles[i].position.x, tiles[i].position.y, tiles[i].size.x, tiles[i].size.y };
+       Player.collision = CheckCollisionRecs(playerRec, tileRec);
+        if (Player.collision) {
+            Player.velocity.y = 0;
+            Player.isGrounded = true;
+        }
+    }
+}
+
 // Update
 static void Update(void)
 {
     delta = GetFrameTime();
     updatePhysics(delta);
+    CheckTileCollisions();
 
     if (!Player.isGrounded)
     {
@@ -213,6 +239,8 @@ static void ProccessInput(void)
         OnJumpKeyPressed();
 }
 
+
+
 // Draw frame
 static void DrawFrame(void)
 {
@@ -223,10 +251,15 @@ static void DrawFrame(void)
 
     BeginMode2D(camera);
 
+    // Draw ground tiles (in world coordinates) first so the player is drawn on top
+    for (int i = 0; i < tileCount; ++i) {
+        DrawRectangleV(tiles[i].position, tiles[i].size, DARKBROWN);
+    }
+
+    // Draw player using world position
     DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
 
     EndMode2D();
-
     DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, RED);
     DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, RED);
     DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, MAROON);

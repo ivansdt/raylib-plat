@@ -18,9 +18,7 @@ typedef struct {
     bool isJumping;
     bool isMoving;
     // Flags for detecting collision
-    bool hitOnFloor;
-    bool hitOnCeiling;
-    bool hitOnWall;
+    bool collision;
 
 } Entity;
 
@@ -30,6 +28,5 @@ typedef struct  {
     Vector2 position;
     Vector2 size;
 
-} ground;
+} groundTile;
 
-static ground groundArr[5] = {0};
