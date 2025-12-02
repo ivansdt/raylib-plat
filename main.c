@@ -20,6 +20,7 @@
  ********************************************************************************************/
 
 #include "raylib.h"
+#include "math.h"
 #include "animation.c"
 #include "structures.c"
 #include "physics.c"
@@ -33,7 +34,12 @@
 //----------------------------------------------------------------------------------
 Camera2D camera = {0};
 Texture2D glubeIdle;
+Texture2D glubeWalk;
+Texture2D glubeJumpFall;
 Rectangle sourceRec;
+
+Texture2D currentAnim;
+int currentAnimId;
 
 static float delta;
 //----------------------------------------------------------------------------------
@@ -61,14 +67,17 @@ int main()
     camera.zoom = 1.0f;
 
     Player.position.x = 200;
-    Player.position.y = 300;
+    Player.position.y = 200;
     Player.velocity.x = 0;
     Player.velocity.y = 0;
 
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
+    glubeWalk = LoadTexture("resources/glube/glube_asset-sprite_walk_sheet.png");
+    glubeJumpFall = LoadTexture("resources/glube/glube_asset-sprite_jumpfall_sheet.png");
 
-    initAnim(0, "GlobbIdle", 44.0f, 31.0f);
-    initAnim(1, "GlobbWalk", 65.0f, 32.0f);
+    initAnim(0, "GlobbIdle", 44.0f, 31.0f, 6);
+    initAnim(1, "GlobbWalk", 65.0f, 32.0f, 8);
+    initAnim(2, "GlobbJumpFall", 46.0f, 38.0f, 5);
     //--------------------------------------------------------------------------------------
 
 #if defined(PLATFORM_WEB)
@@ -81,8 +90,8 @@ int main()
     // Main game loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
-        Update();
         ProccessInput();
+        Update();
         DrawFrame();
     }
 #endif
@@ -98,35 +107,110 @@ int main()
 // Input functions
 void OnJumpKeyPressed()
 {
-    Player.velocity.y = -3;
+    if (Player.isGrounded)
+    {
+        Player.velocity.y = -8;
+        Player.isJumping = true;
+    }
+}
+
+// Reset animation
+void ResetAnim(int id)
+{
+    animations[id].current = 0;
+    animations[id].frameCount = 0;
 }
 
 // Update
 static void Update(void)
 {
     delta = GetFrameTime();
-    sourceRec = animate(0, 5);
     updatePhysics(delta);
+
+    if (!Player.isGrounded)
+    {
+        if (Player.isJumping)
+        {
+            if (currentAnimId != 2)
+            {
+                ResetAnim(currentAnimId);
+            }
+            currentAnim = glubeJumpFall;
+            currentAnimId = 2;
+            sourceRec = animateJump(currentAnimId, 5);
+            if (Player.direction < 0)
+                sourceRec.width = sourceRec.width * -1;
+            else
+                sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+        }
+        else
+        {
+            if (currentAnimId != 2)
+            {
+                ResetAnim(currentAnimId);
+            }
+            currentAnim = glubeJumpFall;
+            currentAnimId = 2;
+            if (animations[currentAnimId].current == 0)
+                animations[currentAnimId].current = 3;
+            sourceRec = animateJump(currentAnimId, 5);
+            if (Player.direction < 0)
+                sourceRec.width = sourceRec.width * -1;
+            else
+                sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+        }
+    }
+    else if (!Player.isMoving && Player.isGrounded)
+    {
+        if (currentAnimId != 0)
+        {
+            ResetAnim(currentAnimId);
+        }
+        currentAnim = glubeIdle;
+        currentAnimId = 0;
+        sourceRec = animate(currentAnimId, 6);
+        if (Player.direction < 0)
+            sourceRec.width = sourceRec.width * -1;
+        else
+            sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+    }
+    else if (Player.isGrounded)
+    {
+        if (currentAnimId != 1)
+        {
+            ResetAnim(currentAnimId);
+        }
+        currentAnim = glubeWalk;
+        currentAnimId = 1;
+        sourceRec = animate(currentAnimId, 8);
+        currentAnim = glubeWalk;
+        if (Player.direction < 0)
+            sourceRec.width = sourceRec.width * -1;
+        else
+            sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+    }
 }
 // Proccess inputs
 static void ProccessInput(void)
 {
+    Player.isMoving = false;
+
     if (IsKeyDown(KEY_A))
     {
-        Player.position.x -= Player.velocity.x + 2;
+        Player.position.x -= Player.velocity.x + 3;
         Player.isMoving = true;
+        Player.direction = 1;
     }
 
     if (IsKeyDown(KEY_D))
     {
-        Player.position.x += Player.velocity.x + 2;
+        Player.position.x += Player.velocity.x + 3;
         Player.isMoving = true;
+        Player.direction = -1;
     }
 
     if (IsKeyPressed(KEY_SPACE))
         OnJumpKeyPressed();
-
-    Player.isMoving = false;
 }
 
 // Draw frame
@@ -139,13 +223,14 @@ static void DrawFrame(void)
 
     BeginMode2D(camera);
 
-    DrawTextureRec(glubeIdle, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
+    DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
 
     EndMode2D();
 
-    DrawText(TextFormat("Current frame: %i", animations[0].current), 10, 35, 20, RED);
-    DrawText(TextFormat("SourceRec.x: %f", sourceRec.x), 10, 55, 20, RED);
-    DrawText(TextFormat("speed.y: %f", Player.velocity.y), 10, 75, 20, RED);
+    DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, RED);
+    DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, RED);
+    DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, MAROON);
+    DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, MAROON);
 
     EndDrawing();
     //----------------------------------------------------------------------------------

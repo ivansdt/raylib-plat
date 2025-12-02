@@ -2,7 +2,7 @@
 
 typedef struct {
     Vector2 position;
-    float direction;
+    int direction;
     float maxSpd;
     float acc;
     float dcc;
