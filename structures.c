@@ -20,6 +20,7 @@ typedef struct {
     bool isMoving;
     // Flags for detecting collision
     bool collision;
+    bool hitWall;
 
 } Entity;
 

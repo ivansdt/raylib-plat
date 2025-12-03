@@ -44,6 +44,7 @@ static void CheckTileCollisions(void)
     float playerWidth = 42;
     float playerHeight = 32;
     Rectangle playerRec = { Player.position.x, Player.position.y, playerWidth, playerHeight };
+    Player.hitWall = false;
     
     for (int i = 0; i < tileCount; ++i) {
         Rectangle tileRec = { tiles[i].position.x, tiles[i].position.y, tiles[i].size.x, tiles[i].size.y };
@@ -52,16 +53,17 @@ static void CheckTileCollisions(void)
             Player.velocity.y = 0;
             Player.isGrounded = true;
             Player.isJumping = false;
+            Player.position.y = tiles[i].position.y - 30 - Player.velocity.y;
         }
         else if (Player.collision && playerRec.x <= tiles[i].position.x - 31)
         {
-            Player.velocity.x = -3;
-            Player.position.x += Player.velocity.x;
+            Player.velocity.x = -4;
+            Player.hitWall = true;
         }
         else if (Player.collision && playerRec.x  >= tiles[i].position.x + (tiles[i].size.x*7/8))
         {
-            Player.velocity.x = 3;
-            Player.position.x += Player.velocity.x;
+            Player.velocity.x = 4;
+            Player.hitWall = true;
         }
         else if (Player.collision && Player.position.y >= tiles[i].position.y )
         {
