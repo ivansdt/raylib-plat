@@ -61,7 +61,7 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "raylib");
 
-    camera.target = (Vector2){200, 300};
+    camera.target = (Vector2){Player.position.x + 20.0f, Player.position.y + 20.0f};
     camera.offset = (Vector2){screenWidth / 2.0f, screenHeight / 2.0f};
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
@@ -223,14 +223,22 @@ static void DrawFrame(void)
 
     BeginMode2D(camera);
 
+    camera.target.x = Player.position.x + 20.0f;
+    camera.target.y = Player.position.y - 30.0f;
+
+    DrawRectangle(camera.target.x * 0.5f, camera.target.y * 0.5f, 750, 800, BLUE);
+    DrawRectangle((camera.target.x * 0.3f) + 200, camera.target.y * 0.3f, 150, 700, MAROON);
+    DrawRectangle(camera.target.x * 0.1f, camera.target.y * 0.1f, 300, 500, RED);
+
+    DrawRectangle(-500, 431, 1500, 600, GREEN);
     DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
 
     EndMode2D();
 
-    DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, RED);
-    DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, RED);
-    DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, MAROON);
-    DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, MAROON);
+    DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, GRAY);
+    DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, GRAY);
+    DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, GRAY);
+    DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, GRAY);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
