@@ -36,12 +36,22 @@ Camera2D camera = {0};
 Texture2D glubeIdle;
 Texture2D glubeWalk;
 Texture2D glubeJumpFall;
+
 Rectangle sourceRec;
 
 Texture2D currentAnim;
 int currentAnimId;
 
+BlendMode mult = BLEND_MULTIPLIED;
+BlendMode add = BLEND_ADDITIVE;
 static float delta;
+
+Color CRIMSONSKY = {163, 39, 35, 255};
+Color TRANSPARENTSKY = {163, 39, 35, 0};
+Color SUNSET = {255, 194, 13, 170};
+Color TRANSPARENTSUNSET = {255, 194, 13, 15};
+Color HALFWHITE = {255, 255, 255, 64};
+
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
 //----------------------------------------------------------------------------------
@@ -105,7 +115,6 @@ int main()
     return 0;
 }
 
-
 // Input functions
 void OnJumpKeyPressed()
 {
@@ -121,6 +130,12 @@ void ResetAnim(int id)
 {
     animations[id].current = 0;
     animations[id].frameCount = 0;
+}
+
+// Draw parallax rectangle
+static void DrawRectanglePar(int posX, int posY, int sizeX, int sizeY, float offset, Color recColor)
+{
+    DrawRectangle((camera.target.x * offset) + posX, (camera.target.y * offset) + posY, sizeX, sizeY, recColor);
 }
 
 
@@ -221,8 +236,6 @@ static void ProccessInput(void)
         OnJumpKeyPressed();
 }
 
-
-
 // Draw frame
 static void DrawFrame(void)
 {
@@ -230,20 +243,35 @@ static void DrawFrame(void)
     //----------------------------------------------------------------------------------
 
     ClearBackground(RAYWHITE);
+    DrawRectangleGradientV(0, 0, GetScreenWidth(), GetScreenWidth(), GetColor(0xA32723ff), GetColor(0xFFC405ff));
 
     BeginMode2D(camera);
 
-    camera.target.x = Player.position.x + 20.0f;
+    camera.target.x = Player.position.x;
     camera.target.y = Player.position.y - 30.0f;
 
-    DrawRectangle(camera.target.x * 0.5f, camera.target.y * 0.5f, 750, 800, BLUE);
-    DrawRectangle((camera.target.x * 0.3f) + 200, camera.target.y * 0.3f, 150, 700, MAROON);
-    DrawRectangle(camera.target.x * 0.1f, camera.target.y * 0.1f, 300, 500, RED);
+    // Mountains
+    DrawRectanglePar(-500, 50, 2000, 800, 0.5f, GetColor(0x1B2414ff));
 
-    DrawRectangle(-500, 431, 1500, 600, GREEN);
+    // Mid buildings
+    DrawRectanglePar(-250, 0, 200, 600, 0.3f, GetColor(0x543A2Cff));
+    DrawRectanglePar(180, -300, 120, 900, 0.3f, GetColor(0x543A2Cff));
+    DrawRectanglePar(540, -200, 220, 800, 0.3f, GetColor(0x543A2Cff));
+
+    // Mid ground
+    DrawRectanglePar(-500, 320, 1500, 700, 0.3f, GetColor(0x2B3D12ff));
+
+    // Front buildings
+    DrawRectanglePar(0, -100, 200, 700, 0.1f, GetColor(0x825A44ff));
+    DrawRectanglePar(400, -400, 210, 1000, 0.1f, GetColor(0x825A44ff));
+    DrawRectanglePar(750, -250, 170, 850, 0.1f, GetColor(0x825A44ff));
+
+    DrawRectangle(-500, 431, 1500, 600, GetColor(0x44611Dff));
+
     // Draw ground tiles (in world coordinates) first so the player is drawn on top
-    for (int i = 0; i < tileCount; ++i) {
-        DrawRectangleV(tiles[i].position, tiles[i].size, DARKBROWN);
+    for (int i = 0; i < tileCount; ++i)
+    {
+        DrawRectangleV(tiles[i].position, tiles[i].size, GetColor(0x0F0904ff));
     }
 
     // Draw player using world position
@@ -251,11 +279,22 @@ static void DrawFrame(void)
 
     EndMode2D();
 
-    DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, GRAY);
-    DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, GRAY);
-    DrawText(TextFormat("X Speed: %.2f", Player.velocity.x), 10, 50, 20, GRAY);
-    DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, GRAY);
-    DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 90, 20, GRAY);
+    // Blend
+    BeginBlendMode(mult);
+    DrawRectangleGradientV(0, 0, GetScreenWidth(), GetScreenWidth(), CRIMSONSKY, TRANSPARENTSUNSET);
+    EndBlendMode();
+
+    // Blend
+    BeginBlendMode(add);
+    DrawRectangleGradientV(0, 0, GetScreenWidth(), GetScreenWidth(), TRANSPARENTSKY, SUNSET);
+    EndBlendMode();
+
+    DrawFPS(GetScreenWidth() - 80, 10);
+
+    DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, HALFWHITE);
+    DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, HALFWHITE);
+    DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, HALFWHITE);
+    DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, HALFWHITE);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
