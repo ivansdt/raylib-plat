@@ -66,6 +66,7 @@ int main()
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
+
     Player.position.x = 200;
     Player.position.y = 200;
     Player.velocity.x = 0;
@@ -201,14 +202,17 @@ static void ProccessInput(void)
 
     if (IsKeyDown(KEY_A))
     {
-        Player.position.x -= Player.velocity.x + 3;
+        if (Player.velocity.x > -3)
+        Player.velocity.x += -3;
+        Player.position.x += Player.velocity.x;
         Player.isMoving = true;
-        Player.direction = 1;
-    }
+        Player.direction = +1;
+     }
 
     if (IsKeyDown(KEY_D))
     {
-        Player.position.x += Player.velocity.x + 3;
+        Player.velocity.x += 3;
+        Player.position.x += Player.velocity.x;
         Player.isMoving = true;
         Player.direction = -1;
     }
@@ -249,8 +253,9 @@ static void DrawFrame(void)
 
     DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, GRAY);
     DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, GRAY);
-    DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, GRAY);
+    DrawText(TextFormat("X Speed: %.2f", Player.velocity.x), 10, 50, 20, GRAY);
     DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, GRAY);
+    DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 90, 20, GRAY);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
