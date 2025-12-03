@@ -243,7 +243,7 @@ static void DrawFrame(void)
 
     BeginMode2D(camera);
 
-    camera.target.x = Player.position.x + 20.0f;
+    camera.target.x = Player.position.x;
     camera.target.y = Player.position.y - 30.0f;
 
     // Mountains
