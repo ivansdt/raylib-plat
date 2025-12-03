@@ -104,6 +104,7 @@ int main()
     return 0;
 }
 
+
 // Input functions
 void OnJumpKeyPressed()
 {
@@ -121,11 +122,36 @@ void ResetAnim(int id)
     animations[id].frameCount = 0;
 }
 
+groundTile tiles[] = {
+    { {  50.0, 300.0 }, { 32.0, 32.0 } },   // tile at (50 x,300 y), size 32x32
+    { { 150.0, 300.0 }, { 32.0, 48.0 } },  
+    { { 300.0, 300.0 }, { 64.0, 16.0 } }    
+};
+int tileCount = sizeof(tiles) / sizeof(tiles[0]);
+
+// Collision check
+static void CheckTileCollisions(void)
+{
+    float playerWidth = 30;
+    float playerHeight = 30;
+    Rectangle playerRec = { Player.position.x, Player.position.y, playerWidth, playerHeight };
+    
+    for (int i = 0; i < tileCount; ++i) {
+        Rectangle tileRec = { tiles[i].position.x, tiles[i].position.y, tiles[i].size.x, tiles[i].size.y };
+       Player.collision = CheckCollisionRecs(playerRec, tileRec);
+        if (Player.collision) {
+            Player.velocity.y = 0;
+            Player.isGrounded = true;
+        }
+    }
+}
+
 // Update
 static void Update(void)
 {
     delta = GetFrameTime();
     updatePhysics(delta);
+    CheckTileCollisions();
 
     if (!Player.isGrounded)
     {
@@ -213,6 +239,8 @@ static void ProccessInput(void)
         OnJumpKeyPressed();
 }
 
+
+
 // Draw frame
 static void DrawFrame(void)
 {
@@ -231,6 +259,12 @@ static void DrawFrame(void)
     DrawRectangle(camera.target.x * 0.1f, camera.target.y * 0.1f, 300, 500, RED);
 
     DrawRectangle(-500, 431, 1500, 600, GREEN);
+    // Draw ground tiles (in world coordinates) first so the player is drawn on top
+    for (int i = 0; i < tileCount; ++i) {
+        DrawRectangleV(tiles[i].position, tiles[i].size, DARKBROWN);
+    }
+
+    // Draw player using world position
     DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
 
     EndMode2D();

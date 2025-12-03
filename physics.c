@@ -3,6 +3,8 @@
 static int gravity = 2;
 static int ground = 400;
 
+
+
 void updatePhysics(float time)
 {
 
@@ -28,3 +30,4 @@ void updatePhysics(float time)
         Player.isGrounded = false;
     }
 }
+

@@ -18,10 +18,15 @@ typedef struct {
     bool isJumping;
     bool isMoving;
     // Flags for detecting collision
-    bool hitOnFloor;
-    bool hitOnCeiling;
-    bool hitOnWall;
+    bool collision;
 
 } Entity;
 
 static Entity Player = { 0 };
+
+typedef struct  {
+    Vector2 position;
+    Vector2 size;
+
+} groundTile;
+
