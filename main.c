@@ -174,7 +174,7 @@ static void Update(void)
             }
             currentAnim = glubeJumpFall;
             currentAnimId = 2;
-            if (animations[currentAnimId].current == 0)
+            if (animations[currentAnimId].current < 3)
                 animations[currentAnimId].current = 3;
             sourceRec = animateJump(currentAnimId, 5);
             if (Player.direction < 0)
@@ -223,7 +223,7 @@ static void ProccessInput(void)
     {
         if (Player.keyPressed != 1)
         {
-            if (Player.velocity.x > -3)
+            if (Player.velocity.x > -4)
             {
                 Player.velocity.x += -3;
             }
@@ -237,7 +237,7 @@ static void ProccessInput(void)
     {
         if (Player.keyPressed > -1)
         {
-            if (Player.velocity.x < 3)
+            if (Player.velocity.x < 4)
             {
                 Player.velocity.x += 3;
             }
@@ -247,8 +247,18 @@ static void ProccessInput(void)
         }
     }
 
+    if (Player.keyPressed == 0)
+    {
+        if (Player.velocity.x < 0)
+            Player.velocity.x += 1;
+        else if (Player.velocity.x > 0)
+            Player.velocity.x += -1;
+    }
+
     if (IsKeyPressed(KEY_SPACE))
+    {
         OnJumpKeyPressed();
+    }
 }
 
 // Draw frame
@@ -299,7 +309,6 @@ static void DrawFrame(void)
     DrawRectangleGradientV(0, 0, GetScreenWidth(), GetScreenWidth(), CRIMSONSKY, TRANSPARENTSUNSET);
     EndBlendMode();
 
-    // Blend
     BeginBlendMode(add);
     DrawRectangleGradientV(0, 0, GetScreenWidth(), GetScreenWidth(), TRANSPARENTSKY, SUNSET);
     EndBlendMode();
@@ -313,6 +322,11 @@ static void DrawFrame(void)
     DrawText(TextFormat("X Speed: %.2f", Player.velocity.x), 10, 90, 20, HALFWHITE);
     DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 110, 20, HALFWHITE);
     DrawText(TextFormat("Key pressed: %i", Player.keyPressed), 10, 130, 20, HALFWHITE);
+
+    if (Player.isJumping)
+        DrawText(TextFormat("Airborne: Yes", Player.keyPressed), 10, 150, 20, HALFWHITE);
+    else
+        DrawText(TextFormat("Airborne: No", Player.keyPressed), 10, 150, 20, HALFWHITE);
 
     EndDrawing();
     //----------------------------------------------------------------------------------

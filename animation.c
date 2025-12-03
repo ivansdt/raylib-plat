@@ -49,7 +49,7 @@ static Rectangle animateJump(int arrId, int max)
 {
     animations[arrId].frameCount++;
 
-    if (animations[arrId].frameCount >= (60 / animations[arrId].fps))
+    if (animations[arrId].frameCount >= (60 / (animations[arrId].fps + 1)))
     {
         animations[arrId].frameCount = 0;
         if(animations[arrId].current < max-1)
