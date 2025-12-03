@@ -13,6 +13,7 @@ typedef struct {
     // Carry stored subpixel values
     float hsp;
     float vsp;
+    int keyPressed;
 
     bool isGrounded;
     bool isJumping;

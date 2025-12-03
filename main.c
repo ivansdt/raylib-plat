@@ -76,7 +76,6 @@ int main()
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-
     Player.position.x = 200;
     Player.position.y = 200;
     Player.velocity.x = 0;
@@ -137,8 +136,6 @@ static void DrawRectanglePar(int posX, int posY, int sizeX, int sizeY, float off
 {
     DrawRectangle((camera.target.x * offset) + posX, (camera.target.y * offset) + posY, sizeX, sizeY, recColor);
 }
-
-
 
 // Update
 static void Update(void)
@@ -214,22 +211,36 @@ static void Update(void)
 static void ProccessInput(void)
 {
     Player.isMoving = false;
+    Player.keyPressed = 0;
 
     if (IsKeyDown(KEY_A))
     {
-        if (Player.velocity.x > -3)
-        Player.velocity.x += -3;
-        Player.position.x += Player.velocity.x;
-        Player.isMoving = true;
-        Player.direction = +1;
-     }
+        if (Player.keyPressed != 1)
+        {
+            if (Player.velocity.x > -3)
+            {
+                Player.velocity.x += -1;
+            }
+            Player.position.x += Player.velocity.x;
+            Player.isMoving = true;
+            Player.direction = 1;
+            Player.keyPressed = -1;
+        }
+    }
 
     if (IsKeyDown(KEY_D))
     {
-        Player.velocity.x += 3;
-        Player.position.x += Player.velocity.x;
-        Player.isMoving = true;
-        Player.direction = -1;
+        if (Player.keyPressed > -1)
+        {
+            if (Player.velocity.x < 3)
+            {
+                Player.velocity.x += 1;
+            }
+            Player.position.x += Player.velocity.x;
+            Player.isMoving = true;
+            Player.direction = -1;
+            Player.keyPressed = 1;
+        }
     }
 
     if (IsKeyPressed(KEY_SPACE))
@@ -295,6 +306,9 @@ static void DrawFrame(void)
     DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, HALFWHITE);
     DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, HALFWHITE);
     DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, HALFWHITE);
+    DrawText(TextFormat("X Speed: %.2f", Player.velocity.x), 10, 90, 20, HALFWHITE);
+    DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 110, 20, HALFWHITE);
+    DrawText(TextFormat("Key pressed: %i", Player.keyPressed), 10, 130, 20, HALFWHITE);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
