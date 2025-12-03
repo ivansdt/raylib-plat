@@ -50,6 +50,7 @@ static void CheckTileCollisions(void)
         if (Player.collision && Player.position.y + 23 - Player.velocity.y <= tiles[i].position.y)  {
             Player.velocity.y = 0;
             Player.isGrounded = true;
+            Player.isJumping = false;
         }
         else if (Player.collision && playerRec.x <= tileRec.x )
         {
