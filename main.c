@@ -140,6 +140,12 @@ static void DrawRectanglePar(int posX, int posY, int sizeX, int sizeY, float off
 // Update
 static void Update(void)
 {
+    if (Player.velocity.x > 0) {
+        Player.direction= -1;
+    }
+    else if (Player.velocity.x < 0) {
+        Player.direction= 1;
+    }
     delta = GetFrameTime();
     updatePhysics(delta);
     CheckTileCollisions();
@@ -219,11 +225,10 @@ static void ProccessInput(void)
         {
             if (Player.velocity.x > -3)
             {
-                Player.velocity.x += -1;
+                Player.velocity.x += -3;
             }
             Player.position.x += Player.velocity.x;
             Player.isMoving = true;
-            Player.direction = 1;
             Player.keyPressed = -1;
         }
     }
@@ -234,11 +239,10 @@ static void ProccessInput(void)
         {
             if (Player.velocity.x < 3)
             {
-                Player.velocity.x += 1;
+                Player.velocity.x += 3;
             }
             Player.position.x += Player.velocity.x;
             Player.isMoving = true;
-            Player.direction = -1;
             Player.keyPressed = 1;
         }
     }
