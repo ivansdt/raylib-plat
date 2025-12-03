@@ -131,6 +131,12 @@ void ResetAnim(int id)
     animations[id].frameCount = 0;
 }
 
+// Draw parallax rectangle
+static void DrawRectanglePar(int posX, int posY, int sizeX, int sizeY, float offset, Color recColor)
+{
+    DrawRectangle((camera.target.x * offset) + posX, (camera.target.y * offset) + posY, sizeX, sizeY, recColor);
+}
+
 
 
 // Update
