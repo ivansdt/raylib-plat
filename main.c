@@ -45,6 +45,7 @@ int currentAnimId;
 BlendMode mult = BLEND_MULTIPLIED;
 BlendMode add = BLEND_ADDITIVE;
 static float delta;
+bool debugMode = false;
 
 Color CRIMSONSKY = {163, 39, 35, 255};
 Color TRANSPARENTSKY = {163, 39, 35, 0};
@@ -122,6 +123,20 @@ void OnJumpKeyPressed()
         Player.velocity.y = -8;
         Player.isJumping = true;
     }
+
+    if ((Player.hitWallL || Player.hitWallR) && Player.isJumping)
+    {
+        if (!Player.isGooping)
+        {
+            if ((Player.hitWallR && Player.direction == -1) || (Player.hitWallL && Player.direction == 1))
+                Player.isGooping = true;
+        }
+        else
+        {
+            Player.isGooping = false;
+            Player.velocity.y = -8;
+        }
+    }
 }
 
 // Reset animation
@@ -153,6 +168,9 @@ static void Update(void)
     delta = GetFrameTime();
     updatePhysics(delta);
     CheckTileCollisions();
+
+    if (Player.isGrounded && goopMeter < 60)
+        goopMeter++;
 
     if (!Player.isGrounded)
     {
@@ -225,7 +243,7 @@ static void ProccessInput(void)
 
     if (IsKeyDown(KEY_A))
     {
-        if (!Player.hitWall)
+        if (!Player.hitWallL && !Player.isGooping)
         {
             if (Player.keyPressed != 1)
             {
@@ -243,16 +261,19 @@ static void ProccessInput(void)
 
     if (IsKeyDown(KEY_D))
     {
-        if (Player.keyPressed > -1)
+        if (!Player.hitWallR && !Player.isGooping)
         {
-            if (Player.velocity.x < 4)
+            if (Player.keyPressed > -1)
             {
-                Player.velocity.x += 2;
+                if (Player.velocity.x < 4)
+                {
+                    Player.velocity.x += 2;
+                }
+                Player.position.x += Player.velocity.x;
+                Player.isMoving = true;
+                Player.keyPressed = 1;
+                Player.direction = -1;
             }
-            Player.position.x += Player.velocity.x;
-            Player.isMoving = true;
-            Player.keyPressed = 1;
-            Player.direction = -1;
         }
     }
 
@@ -267,6 +288,14 @@ static void ProccessInput(void)
     if (IsKeyPressed(KEY_SPACE))
     {
         OnJumpKeyPressed();
+    }
+
+    if (IsKeyPressed(KEY_J))
+    {
+        if (debugMode)
+            debugMode = false;
+        else
+            debugMode = true;
     }
 
     if (Player.velocity.x > 4)
@@ -327,20 +356,44 @@ static void DrawFrame(void)
     DrawRectangleGradientV(0, 0, GetScreenWidth(), GetScreenWidth(), TRANSPARENTSKY, SUNSET);
     EndBlendMode();
 
-    DrawFPS(GetScreenWidth() - 80, 10);
+    if (debugMode)
+    {
+        DrawFPS(GetScreenWidth() - 80, 10);
 
-    DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, HALFWHITE);
-    DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, HALFWHITE);
-    DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, HALFWHITE);
-    DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, HALFWHITE);
-    DrawText(TextFormat("X Speed: %.2f", Player.velocity.x), 10, 90, 20, HALFWHITE);
-    DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 110, 20, HALFWHITE);
-    DrawText(TextFormat("Key pressed: %i", Player.keyPressed), 10, 130, 20, HALFWHITE);
+        DrawText(TextFormat("Current anim: %s", animations[currentAnimId].name), 10, 10, 20, HALFWHITE);
+        DrawText(TextFormat("Anim frame: %i/%i (x: %.2f)", animations[currentAnimId].current + 1, animations[currentAnimId].fps, sourceRec.x), 10, 30, 20, HALFWHITE);
+        DrawText(TextFormat("Y Speed: %.2f", Player.velocity.y), 10, 50, 20, HALFWHITE);
+        DrawText(TextFormat("Y Pos: %.2f", Player.position.y), 10, 70, 20, HALFWHITE);
+        DrawText(TextFormat("X Speed: %.2f", Player.velocity.x), 10, 90, 20, HALFWHITE);
+        DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 110, 20, HALFWHITE);
+        DrawText(TextFormat("Key pressed: %i", Player.keyPressed), 10, 130, 20, HALFWHITE);
 
-    if (Player.isJumping)
-        DrawText(TextFormat("Airborne: Yes", Player.keyPressed), 10, 150, 20, HALFWHITE);
-    else
-        DrawText(TextFormat("Airborne: No", Player.keyPressed), 10, 150, 20, HALFWHITE);
+        if (Player.isJumping)
+            DrawText(TextFormat("Airborne: Yes"), 10, 150, 20, HALFWHITE);
+        else
+            DrawText(TextFormat("Airborne: No"), 10, 150, 20, HALFWHITE);
+
+        DrawText(TextFormat("Goop: %i", goopMeter), 10, 170, 20, HALFWHITE);
+
+        if (Player.isGooping)
+            DrawText(TextFormat("Gooping: Yes"), 10, 190, 20, HALFWHITE);
+        else
+            DrawText(TextFormat("Gooping: No"), 10, 190, 20, HALFWHITE);
+
+        DrawText(TextFormat("Direction: %i", Player.direction), 10, 210, 20, HALFWHITE);
+
+        if (Player.isGrounded)
+            DrawText(TextFormat("Grounded: Yes"), 10, 230, 20, HALFWHITE);
+        else
+            DrawText(TextFormat("Grounded: No"), 10, 230, 20, HALFWHITE);
+
+        if (Player.hitWallL)
+            DrawText(TextFormat("HitWall: Left"), 10, 250, 20, HALFWHITE);
+        else if (Player.hitWallR)
+            DrawText(TextFormat("HitWall: Right"), 10, 250, 20, HALFWHITE);
+        else
+            DrawText(TextFormat("HitWall: No"), 10, 250, 20, HALFWHITE);
+    }
 
     EndDrawing();
     //----------------------------------------------------------------------------------

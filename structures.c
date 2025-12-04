@@ -18,9 +18,11 @@ typedef struct {
     bool isGrounded;
     bool isJumping;
     bool isMoving;
+    bool isGooping;
     // Flags for detecting collision
     bool collision;
-    bool hitWall;
+    bool hitWallL;
+    bool hitWallR;
 
 } Entity;
 
