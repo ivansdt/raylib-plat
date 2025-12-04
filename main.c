@@ -52,6 +52,7 @@ Color TRANSPARENTSKY = {163, 39, 35, 0};
 Color SUNSET = {255, 194, 13, 170};
 Color TRANSPARENTSUNSET = {255, 194, 13, 15};
 Color HALFWHITE = {255, 255, 255, 64};
+Color GOOPGREEN = {0, 255, 0, 0};
 
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
@@ -344,6 +345,7 @@ static void DrawFrame(void)
 
     // Draw player using world position
     DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
+    DrawRectangle(Player.position.x + 45, Player.position.y - 5, 30, 6, GREEN);
 
     EndMode2D();
 
