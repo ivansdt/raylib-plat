@@ -157,6 +157,11 @@ void OnJumpKeyPressed()
             Player.isGooping = false;
             Player.velocity.y = -8;
             Player.isJumping = true;
+
+            if (goopMeter > 10)
+                goopMeter -= 10;
+            else
+                goopMeter = 0;
         }
     }
 }
@@ -185,11 +190,15 @@ static void Update(void)
     CheckTileCollisions();
     offset = 0;
 
-    if (Player.isGrounded)
+    if (!Player.isGooping)
     {
-        if (goopMeter < 60)
-            goopMeter++;
-        else
+        if (Player.isGrounded)
+        {
+            if (goopMeter < 60)
+                goopMeter++;
+        }
+
+        if (goopMeter == 60)
         {
             if (GOOPGREEN.a > 0)
                 GOOPGREEN.a -= 51;
