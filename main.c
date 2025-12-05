@@ -36,11 +36,14 @@ Camera2D camera = {0};
 Texture2D glubeIdle;
 Texture2D glubeWalk;
 Texture2D glubeJumpFall;
+Texture2D glubeGoop;
 
 Rectangle sourceRec;
+Rectangle destRec;
 
 Texture2D currentAnim;
 int currentAnimId;
+int offset;
 
 BlendMode mult = BLEND_MULTIPLIED;
 BlendMode add = BLEND_ADDITIVE;
@@ -52,7 +55,6 @@ Color TRANSPARENTSKY = {163, 39, 35, 0};
 Color SUNSET = {255, 194, 13, 170};
 Color TRANSPARENTSUNSET = {255, 194, 13, 15};
 Color HALFWHITE = {255, 255, 255, 64};
-Color GOOPGREEN = {0, 255, 0, 0};
 
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
@@ -86,10 +88,13 @@ int main()
     glubeIdle = LoadTexture("resources/glube/glube_asset-sprite_idle_sheet.png");
     glubeWalk = LoadTexture("resources/glube/glube_asset-sprite_walk_sheet.png");
     glubeJumpFall = LoadTexture("resources/glube/glube_asset-sprite_jumpfall_sheet.png");
+    glubeGoop = LoadTexture("resources/glube/glube_asset-sprite_goop_sheet.png");
 
     initAnim(0, "GlobbIdle", 44.0f, 31.0f, 6);
     initAnim(1, "GlobbWalk", 65.0f, 32.0f, 8);
     initAnim(2, "GlobbJumpFall", 46.0f, 38.0f, 5);
+    initAnim(3, "GlobbGoop", 29.0f, 46.0f, 1);
+
     //--------------------------------------------------------------------------------------
 
 #if defined(PLATFORM_WEB)
@@ -116,6 +121,13 @@ int main()
     return 0;
 }
 
+// Reset animation
+void ResetAnim(int id)
+{
+    animations[id].current = 0;
+    animations[id].frameCount = 0;
+}
+
 // Input functions
 void OnJumpKeyPressed()
 {
@@ -125,26 +137,28 @@ void OnJumpKeyPressed()
         Player.isJumping = true;
     }
 
-    if ((Player.hitWallL || Player.hitWallR) && Player.isJumping)
+    if ((Player.hitWallL || Player.hitWallR) && !Player.isGrounded)
     {
         if (!Player.isGooping)
         {
-            if ((Player.hitWallR && Player.direction == -1) || (Player.hitWallL && Player.direction == 1))
+            if (Player.hitWallR && Player.direction == -1)
+            {
+                Player.rot = -90.0f;
                 Player.isGooping = true;
+            }
+            else if (Player.hitWallL && Player.direction == 1)
+            {
+                Player.rot = 90.0f;
+                Player.isGooping = true;
+            }
         }
         else
         {
             Player.isGooping = false;
             Player.velocity.y = -8;
+            Player.isJumping = true;
         }
     }
-}
-
-// Reset animation
-void ResetAnim(int id)
-{
-    animations[id].current = 0;
-    animations[id].frameCount = 0;
 }
 
 // Draw parallax rectangle
@@ -169,41 +183,96 @@ static void Update(void)
     delta = GetFrameTime();
     updatePhysics(delta);
     CheckTileCollisions();
+    offset = 0;
 
-    if (Player.isGrounded && goopMeter < 60)
-        goopMeter++;
+    if (Player.isGrounded)
+    {
+        if (goopMeter < 60)
+            goopMeter++;
+        else
+        {
+            if (GOOPGREEN.a > 0)
+                GOOPGREEN.a -= 51;
+            else
+                GOOPGREEN.a = 0;
+        }
+    }
 
     if (!Player.isGrounded)
     {
         if (Player.isJumping)
         {
-            if (currentAnimId != 2)
+            if (Player.isGooping)
             {
-                ResetAnim(currentAnimId);
+                if (currentAnimId != 3)
+                {
+                    ResetAnim(currentAnimId);
+                }
+                currentAnim = glubeGoop;
+                currentAnimId = 3;
+                sourceRec = animateJump(currentAnimId, 1);
+                if (Player.direction < 0)
+                {
+                    sourceRec.width = sourceRec.width * -1;
+                    offset = 14;
+                }
+                else
+                {
+                    sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+                }
             }
-            currentAnim = glubeJumpFall;
-            currentAnimId = 2;
-            sourceRec = animateJump(currentAnimId, 5);
-            if (Player.direction < 0)
-                sourceRec.width = sourceRec.width * -1;
             else
-                sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+            {
+                if (currentAnimId != 2)
+                {
+                    ResetAnim(currentAnimId);
+                }
+                currentAnim = glubeJumpFall;
+                currentAnimId = 2;
+                sourceRec = animateJump(currentAnimId, 5);
+                if (Player.direction < 0)
+                    sourceRec.width = sourceRec.width * -1;
+                else
+                    sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+            }
         }
         else
         {
-            if (currentAnimId != 2)
+            if (Player.isGooping)
             {
-                ResetAnim(currentAnimId);
+                if (currentAnimId != 3)
+                {
+                    ResetAnim(currentAnimId);
+                }
+                currentAnim = glubeGoop;
+                currentAnimId = 3;
+                sourceRec = animateJump(currentAnimId, 1);
+                if (Player.direction < 0)
+                {
+                    sourceRec.width = sourceRec.width * -1;
+                    offset = 14;
+                }
+                else
+                {
+                    sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+                }
             }
-            currentAnim = glubeJumpFall;
-            currentAnimId = 2;
-            if (animations[currentAnimId].current < 3)
-                animations[currentAnimId].current = 3;
-            sourceRec = animateJump(currentAnimId, 5);
-            if (Player.direction < 0)
-                sourceRec.width = sourceRec.width * -1;
             else
-                sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+            {
+                if (currentAnimId != 2)
+                {
+                    ResetAnim(currentAnimId);
+                }
+                currentAnim = glubeJumpFall;
+                currentAnimId = 2;
+                if (animations[currentAnimId].current < 3)
+                    animations[currentAnimId].current = 3;
+                sourceRec = animateJump(currentAnimId, 5);
+                if (Player.direction < 0)
+                    sourceRec.width = sourceRec.width * -1;
+                else
+                    sourceRec.width = sqrt(sourceRec.width * sourceRec.width);
+            }
         }
     }
     else if (!Player.isMoving && Player.isGrounded)
@@ -344,8 +413,8 @@ static void DrawFrame(void)
     }
 
     // Draw player using world position
-    DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x, Player.position.y}, WHITE);
-    DrawRectangle(Player.position.x + 45, Player.position.y - 5, 30, 6, GREEN);
+    DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x + offset, Player.position.y}, WHITE);
+    DrawRectangle(Player.position.x + 45, Player.position.y - 5, goopMeter / 2, 6, GOOPGREEN);
 
     EndMode2D();
 
@@ -370,7 +439,7 @@ static void DrawFrame(void)
         DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 110, 20, HALFWHITE);
         DrawText(TextFormat("Key pressed: %i", Player.keyPressed), 10, 130, 20, HALFWHITE);
 
-        if (Player.isJumping)
+        if (!Player.isGrounded)
             DrawText(TextFormat("Airborne: Yes"), 10, 150, 20, HALFWHITE);
         else
             DrawText(TextFormat("Airborne: No"), 10, 150, 20, HALFWHITE);
@@ -395,6 +464,9 @@ static void DrawFrame(void)
             DrawText(TextFormat("HitWall: Right"), 10, 250, 20, HALFWHITE);
         else
             DrawText(TextFormat("HitWall: No"), 10, 250, 20, HALFWHITE);
+
+        DrawText(TextFormat("currentAnim.width: %i", currentAnim.width), 10, 270, 20, HALFWHITE);
+        DrawText(TextFormat("currentAnim.height: %i", currentAnim.height), 10, 290, 20, HALFWHITE);
     }
 
     EndDrawing();

@@ -3,6 +3,7 @@
 static int gravity = 2;
 static int ground = 400;
 int goopMeter = 60;
+Color GOOPGREEN = {0, 255, 0, 0};
 
 void updatePhysics(float time)
 {
@@ -30,22 +31,20 @@ void updatePhysics(float time)
     }
 
     if (goopMeter < 1)
+    {
         Player.isGooping = false;
-
+    }
     if (Player.isGooping)
     {
+        if (GOOPGREEN.a < 255)
+            GOOPGREEN.a += 51;
+        else
+            GOOPGREEN.a = 255;
         goopMeter--;
         if (goopMeter > 0)
         {
             Player.velocity.y = 0;
             Player.velocity.x = 0;
-        }
-        else
-        {
-            if (Player.direction > 0)
-            {
-                Player.velocity.x = 4;
-            }
         }
     }
 }
@@ -82,15 +81,11 @@ static void CheckTileCollisions(void)
         {
             Player.velocity.x = -4;
             Player.hitWallR = true;
-
-
         }
-        else if (Player.collision && playerRec.x >= tiles[i].position.x + (tiles[i].size.x * 7 / 8)) 
+        else if (Player.collision && playerRec.x >= tiles[i].position.x + (tiles[i].size.x * 7 / 8))
         {
             Player.velocity.x = 4;
             Player.hitWallL = true;
-
-  
         }
         else if (Player.collision && Player.position.y >= tiles[i].position.y)
         {

@@ -3,6 +3,7 @@
 typedef struct {
     Vector2 position;
     int direction;
+    float rot;
     float maxSpd;
     float acc;
     float dcc;
