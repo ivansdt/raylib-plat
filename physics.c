@@ -33,6 +33,7 @@ void updatePhysics(float time)
     if (goopMeter < 1)
     {
         Player.isGooping = false;
+        Player.isJumping = false;
     }
     if (Player.isGooping)
     {
