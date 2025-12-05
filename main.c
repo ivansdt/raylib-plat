@@ -158,8 +158,8 @@ void OnJumpKeyPressed()
             Player.velocity.y = -8;
             Player.isJumping = true;
 
-            if (goopMeter > 10)
-                goopMeter -= 10;
+            if (goopMeter > 15)
+                goopMeter -= 15;
             else
                 goopMeter = 0;
         }
