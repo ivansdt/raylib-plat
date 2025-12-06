@@ -38,12 +38,17 @@ Texture2D glubeWalk;
 Texture2D glubeJumpFall;
 Texture2D glubeGoop;
 
+Texture2D arrowUp;
+
 Rectangle sourceRec;
 Rectangle destRec;
 
 Texture2D currentAnim;
 int currentAnimId;
 int offset;
+
+int leftBarrier = -400;
+int rightBarrier = 1000;
 
 BlendMode mult = BLEND_MULTIPLIED;
 BlendMode add = BLEND_ADDITIVE;
@@ -89,6 +94,8 @@ int main()
     glubeWalk = LoadTexture("resources/glube/glube_asset-sprite_walk_sheet.png");
     glubeJumpFall = LoadTexture("resources/glube/glube_asset-sprite_jumpfall_sheet.png");
     glubeGoop = LoadTexture("resources/glube/glube_asset-sprite_goop_sheet.png");
+
+    arrowUp = LoadTexture("resources/assets/arrow_Up.png");
 
     initAnim(0, "GlobbIdle", 44.0f, 31.0f, 6);
     initAnim(1, "GlobbWalk", 65.0f, 32.0f, 8);
@@ -158,8 +165,8 @@ void OnJumpKeyPressed()
             Player.isGooping = false;
             Player.velocity.y = -10;
 
-            if (goopMeter > 15)
-                goopMeter -= 15;
+            if (goopMeter > 25)
+                goopMeter -= 25;
             else
                 goopMeter = 0;
         }
@@ -322,7 +329,7 @@ static void ProccessInput(void)
 
     if (IsKeyDown(KEY_A))
     {
-        if (!Player.hitWallL && !Player.isGooping && !IsKeyDown(KEY_D))
+        if (!Player.hitWallL && !Player.isGooping && !IsKeyDown(KEY_D) && Player.position.x > leftBarrier)
         {
             if (Player.keyPressed != 1)
             {
@@ -340,7 +347,7 @@ static void ProccessInput(void)
 
     if (IsKeyDown(KEY_D))
     {
-        if (!Player.hitWallR && !Player.isGooping && !IsKeyDown(KEY_A))
+        if (!Player.hitWallR && !Player.isGooping && !IsKeyDown(KEY_A) && Player.position.x < rightBarrier)
         {
             if (Player.keyPressed > -1)
             {
@@ -398,28 +405,31 @@ static void DrawFrame(void)
     camera.target.y = Player.position.y - 30.0f;
 
     // Mountains
-    DrawRectanglePar(-500, 50, 2000, 800, 0.5f, GetColor(0x1B2414ff));
+    DrawRectanglePar(-900, 50, 2000, 800, 0.5f, GetColor(0x1B2414ff));
 
     // Mid buildings
     DrawRectanglePar(-250, 0, 200, 600, 0.3f, GetColor(0x543A2Cff));
     DrawRectanglePar(180, -300, 120, 900, 0.3f, GetColor(0x543A2Cff));
-    DrawRectanglePar(540, -200, 220, 800, 0.3f, GetColor(0x543A2Cff));
+    DrawRectanglePar(440, -200, 220, 800, 0.3f, GetColor(0x543A2Cff));
 
     // Mid ground
-    DrawRectanglePar(-500, 320, 1500, 700, 0.3f, GetColor(0x2B3D12ff));
+    DrawRectanglePar(-900, 320, 1500, 700, 0.3f, GetColor(0x2B3D12ff));
 
     // Front buildings
-    DrawRectanglePar(0, -100, 200, 700, 0.1f, GetColor(0x825A44ff));
-    DrawRectanglePar(400, -400, 210, 1000, 0.1f, GetColor(0x825A44ff));
-    DrawRectanglePar(750, -250, 170, 850, 0.1f, GetColor(0x825A44ff));
+    DrawRectanglePar(-400, -100, 200, 700, 0.1f, GetColor(0x825A44ff));
+    DrawRectanglePar(0, -400, 210, 1000, 0.1f, GetColor(0x825A44ff));
+    DrawRectanglePar(350, -250, 170, 850, 0.1f, GetColor(0x825A44ff));
 
-    DrawRectangle(-500, 431, 1500, 600, GetColor(0x44611Dff));
+    DrawRectangle(-900, 431, 3000, 600, GetColor(0x44611Dff));
 
     // Draw ground tiles (in world coordinates) first so the player is drawn on top
     for (int i = 0; i < tileCount; ++i)
     {
         DrawRectangleV(tiles[i].position, tiles[i].size, GetColor(0x0F0904ff));
     }
+
+    DrawTextureRec(arrowUp, (Rectangle){0, 0, arrowUp.width, arrowUp.height}, (Vector2){550, -1480}, WHITE);
+    DrawTextureRec(arrowUp, (Rectangle){0, 0, arrowUp.width, arrowUp.height}, (Vector2){200, -880}, WHITE);
 
     // Draw player using world position
     DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x + offset, Player.position.y}, WHITE);
