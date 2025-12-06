@@ -39,6 +39,8 @@ Texture2D glubeJumpFall;
 Texture2D glubeGoop;
 
 Texture2D arrowUp;
+Texture2D goal;
+Texture2D tutorialSign;
 
 Rectangle sourceRec;
 Rectangle destRec;
@@ -96,6 +98,8 @@ int main()
     glubeGoop = LoadTexture("resources/glube/glube_asset-sprite_goop_sheet.png");
 
     arrowUp = LoadTexture("resources/assets/arrow_Up.png");
+    goal = LoadTexture("resources/assets/meta.png");
+    tutorialSign = LoadTexture("resources/assets/tutorialsign.png");
 
     initAnim(0, "GlobbIdle", 44.0f, 31.0f, 6);
     initAnim(1, "GlobbWalk", 65.0f, 32.0f, 8);
@@ -404,6 +408,14 @@ static void DrawFrame(void)
     camera.target.x = Player.position.x;
     camera.target.y = Player.position.y - 30.0f;
 
+    // Clouds
+    DrawRectanglePar(-500, -400, 450, 200, 0.7f, LIGHTGRAY);
+    DrawRectanglePar(-200, -250, 200, 150, 0.7f, LIGHTGRAY);
+    DrawRectanglePar(300, -550, 300, 250, 0.7f, LIGHTGRAY);
+    DrawRectanglePar(150, -150, 200, 150, 0.7f, LIGHTGRAY);
+    DrawRectanglePar(200, -50, 250, 175, 0.7f, LIGHTGRAY);
+    DrawRectanglePar(-300, -850, 500, 250, 0.7f, LIGHTGRAY);
+
     // Mountains
     DrawRectanglePar(-900, 50, 2000, 800, 0.5f, GetColor(0x1B2414ff));
 
@@ -420,6 +432,8 @@ static void DrawFrame(void)
     DrawRectanglePar(0, -400, 210, 1000, 0.1f, GetColor(0x825A44ff));
     DrawRectanglePar(350, -250, 170, 850, 0.1f, GetColor(0x825A44ff));
 
+    DrawTextureRec(tutorialSign, (Rectangle){0, 0, tutorialSign.width, tutorialSign.height}, (Vector2){200, 235}, WHITE);
+
     DrawRectangle(-900, 431, 3000, 600, GetColor(0x44611Dff));
 
     // Draw ground tiles (in world coordinates) first so the player is drawn on top
@@ -431,9 +445,13 @@ static void DrawFrame(void)
     DrawTextureRec(arrowUp, (Rectangle){0, 0, arrowUp.width, arrowUp.height}, (Vector2){550, -1480}, WHITE);
     DrawTextureRec(arrowUp, (Rectangle){0, 0, arrowUp.width, arrowUp.height}, (Vector2){200, -880}, WHITE);
 
+    DrawTextureRec(goal, (Rectangle){0, 0, goal.width, goal.height}, (Vector2){750, -1728}, WHITE);
+
     // Draw player using world position
     DrawTextureRec(currentAnim, sourceRec, (Vector2){Player.position.x + offset, Player.position.y}, WHITE);
     DrawRectangle(Player.position.x + 45, Player.position.y - 5, goopMeter / 2, 6, GOOPGREEN);
+
+    // Front clouds
 
     EndMode2D();
 
@@ -483,9 +501,6 @@ static void DrawFrame(void)
             DrawText(TextFormat("HitWall: Right"), 10, 250, 20, HALFWHITE);
         else
             DrawText(TextFormat("HitWall: No"), 10, 250, 20, HALFWHITE);
-
-        DrawText(TextFormat("currentAnim.width: %i", currentAnim.width), 10, 270, 20, HALFWHITE);
-        DrawText(TextFormat("currentAnim.height: %i", currentAnim.height), 10, 290, 20, HALFWHITE);
     }
 
     EndDrawing();
