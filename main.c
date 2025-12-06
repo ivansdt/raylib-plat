@@ -80,8 +80,8 @@ int main()
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-    Player.position.x = 200;
-    Player.position.y = 200;
+    Player.position.x = 150;
+    Player.position.y = 300;
     Player.velocity.x = 0;
     Player.velocity.y = 0;
 
@@ -133,7 +133,7 @@ void OnJumpKeyPressed()
 {
     if (Player.isGrounded)
     {
-        Player.velocity.y = -8;
+        Player.velocity.y = -10;
         Player.isJumping = true;
     }
 
@@ -154,9 +154,9 @@ void OnJumpKeyPressed()
         }
         else
         {
-            Player.isGooping = false;
-            Player.velocity.y = -8;
             Player.isJumping = true;
+            Player.isGooping = false;
+            Player.velocity.y = -10;
 
             if (goopMeter > 15)
                 goopMeter -= 15;
@@ -194,11 +194,11 @@ static void Update(void)
     {
         if (Player.isGrounded)
         {
-            if (goopMeter < 60)
+            if (goopMeter < 75)
                 goopMeter++;
         }
 
-        if (goopMeter == 60)
+        if (goopMeter == 75)
         {
             if (GOOPGREEN.a > 0)
                 GOOPGREEN.a -= 51;
@@ -322,7 +322,7 @@ static void ProccessInput(void)
 
     if (IsKeyDown(KEY_A))
     {
-        if (!Player.hitWallL && !Player.isGooping)
+        if (!Player.hitWallL && !Player.isGooping && !IsKeyDown(KEY_D))
         {
             if (Player.keyPressed != 1)
             {
@@ -340,7 +340,7 @@ static void ProccessInput(void)
 
     if (IsKeyDown(KEY_D))
     {
-        if (!Player.hitWallR && !Player.isGooping)
+        if (!Player.hitWallR && !Player.isGooping && !IsKeyDown(KEY_A))
         {
             if (Player.keyPressed > -1)
             {
@@ -448,10 +448,10 @@ static void DrawFrame(void)
         DrawText(TextFormat("X Pos: %.2f", Player.position.x), 10, 110, 20, HALFWHITE);
         DrawText(TextFormat("Key pressed: %i", Player.keyPressed), 10, 130, 20, HALFWHITE);
 
-        if (!Player.isGrounded)
-            DrawText(TextFormat("Airborne: Yes"), 10, 150, 20, HALFWHITE);
+        if (Player.isJumping)
+            DrawText(TextFormat("Jumping: Yes"), 10, 150, 20, HALFWHITE);
         else
-            DrawText(TextFormat("Airborne: No"), 10, 150, 20, HALFWHITE);
+            DrawText(TextFormat("Jumping: No"), 10, 150, 20, HALFWHITE);
 
         DrawText(TextFormat("Goop: %i", goopMeter), 10, 170, 20, HALFWHITE);
 

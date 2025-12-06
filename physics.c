@@ -1,28 +1,22 @@
 #include "raylib.h"
 
-static int gravity = 2;
+static int gravity = 3;
 static int ground = 400;
-int goopMeter = 60;
+int goopMeter = 75;
 Color GOOPGREEN = {0, 255, 0, 0};
 
 void updatePhysics(float time)
 {
     Player.position.y += Player.velocity.y;
 
-    Player.velocity.y += gravity * (time * 6);
+    Player.velocity.y += gravity * (time * 7);
 
     if (Player.position.y >= ground)
     {
-        if (Player.isJumping)
-        {
-            Player.isJumping = false;
-        }
-        else
-        {
-            Player.isGrounded = true;
-            Player.velocity.y = 0;
-            Player.position.y = ground;
-        }
+        Player.isJumping = false;
+        Player.isGrounded = true;
+        Player.velocity.y = 0;
+        Player.position.y = ground;
     }
 
     if (Player.position.y < ground)
@@ -51,10 +45,13 @@ void updatePhysics(float time)
 }
 
 groundTile tiles[] = {
-    {{50.0, 300.0}, {32.0, 32.0}}, // tile at (50 x,300 y), size 32x32
-    {{150.0, 340.0}, {32.0, 48.0}},
-    {{400.0, 350.0}, {64.0, 16.0}},
-    {{300.0, 50.0}, {100.0, 250.0}}};
+    {{0.0, 320.0}, {84.0, 42.0}},
+    {{-100.0, 170.0}, {42.0, 120.0}},
+    {{80.0, 85.0}, {140.0, 42.0}},
+    {{300.0, -120.0}, {210.0, 140.0}},
+    {{650.0, -710.0}, {84.0, 560.0}},
+
+    {{700.0, 50.0}, {100.0, 250.0}}};
 int tileCount = sizeof(tiles) / sizeof(tiles[0]);
 
 // Collision check
@@ -90,7 +87,7 @@ static void CheckTileCollisions(void)
         }
         else if (Player.collision && Player.position.y >= tiles[i].position.y)
         {
-            Player.velocity.y = 1;
+            Player.velocity.y = 2;
         }
     }
 }
